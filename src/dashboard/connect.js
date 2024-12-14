@@ -1,4 +1,5 @@
 import React from "react";
+import HomePage from './home';
 
 const ConnectFiunc = () => {
 
@@ -6,7 +7,7 @@ const ConnectFiunc = () => {
 
         <div className="connectContainer">
 
-            Connect ...
+            <HomePage />
         </div>
     )
 }
