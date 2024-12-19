@@ -96,7 +96,7 @@ function HomePage() {
 
             {showPrompt && (
                 <div className="emailPrompt">
-                    <h3 className="promptTitle">Sovg'ani olish uchun kirish ma'lumotlaringizni kiriting:</h3>
+                    <h3 className="promptTitle">Sovg'ani olish uchun emailingizni tasdiqlang!</h3>
                     <input
                         type="email"
                         value={email}
