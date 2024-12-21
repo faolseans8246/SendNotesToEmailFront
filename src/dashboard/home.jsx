@@ -58,7 +58,7 @@ function HomePage() {
         }
 
         try {
-            const response = await fetch("https://sendnotestoemail.herokuapp.com/api/message/send", {
+            const response = await fetch("https://sendnotestoemail-46f5713b99e8.herokuapp.com/api/message/send", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
