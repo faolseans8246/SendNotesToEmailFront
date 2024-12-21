@@ -58,7 +58,7 @@ function HomePage() {
         }
 
         try {
-            const response = await fetch("https://your-spring-boot-app.herokuapp.com/api/message/send", {
+            const response = await fetch("https://sendnotestoemail.herokuapp.com/api/message/send", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
