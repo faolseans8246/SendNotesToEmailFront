@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Sahifalarni o'zgartirish uchun
 import './home.css';
 
-import GiftBox from '../image/giftbox.jpg';
+import GiftBox from '../image/giftSanta.jpg';
 
 function HomePage() {
     const [currentLangIndex, setCurrentLangIndex] = useState(0);
@@ -14,13 +14,13 @@ function HomePage() {
 
     // Matn tillari
     const languages = [
-        "Farangiz tug'ilgan kuning bilan tabriklayman",
-        "Поздравляю с днем рождения, Фарангиз",
-        "Happy Birthday, Farangiz",
-        "عيد ميلاد سعيد، فرنغز",
-        "Фарангиз, таваллуд муборак",
-        "Farangiz, doğum günün kutlu olsun",
-        "法兰吉兹，生日快乐"
+        "Yangi 2025-yilingiz bilan tabriklayman",
+        "С новым 2025 годом поздравляю вас",
+        "Happy New Year 2025 to you",
+        "كل عام وأنتم بخير، سنة جديدة سعيدة 2025",
+        "Сизга Янги 2025 йил муборак бўлсин",
+        "Yeni 2025 yılınız kutlu olsun",
+        "祝您新年快乐，2025年快乐"
     ];
 
     // Ranglar
@@ -96,7 +96,7 @@ function HomePage() {
 
             {showPrompt && (
                 <div className="emailPrompt">
-                    <h3 className="promptTitle">Sovg'angizni olish uchun emailingizni tasdiqlang!</h3>
+                    <h3 className="promptTitle">Yangi yil tabrigini olish uchun o'zingizni belgilang!</h3>
                     <input
                         type="email"
                         value={email}
